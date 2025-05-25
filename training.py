@@ -1,12 +1,13 @@
-from transformers import GPT2LMHeadModel, GPT2Tokenizer, Trainer, TrainingArguments, DataCollatorForLanguageModeling, \
-    EarlyStoppingCallback
-from datasets import load_dataset
-import torch
+import random
+
 import optuna
-from optuna.pruners import MedianPruner
+import torch
+from datasets import load_dataset
 from evaluate import load
 from pymorphy2 import MorphAnalyzer
-import random
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, Trainer, TrainingArguments, DataCollatorForLanguageModeling, \
+    EarlyStoppingCallback
+
 
 def load_data():
     dataset = load_dataset("DmitryYarov/aristotle-russian", split="train")
@@ -66,7 +67,7 @@ def tokenize_data(dataset, tokenizer):
 
 
 def optimize_hyperparams(trial, model, tokenized_datasets):
-    #решил сделать перебор параметров
+    # решил сделать перебор параметров
     args = TrainingArguments(
         output_dir="./optuna_trials",
         learning_rate=trial.suggest_float("lr", 1e-5, 5e-4, log=True),

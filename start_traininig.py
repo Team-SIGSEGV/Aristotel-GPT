@@ -1,10 +1,9 @@
-from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments, DataCollatorForLanguageModeling
-from datasets import load_dataset
 import torch
+from datasets import load_dataset
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments, DataCollatorForLanguageModeling
 
 # 1. Загружаем датасет с Hugging Face
 dataset = load_dataset("DmitryYarov/aristotle-russian")
-
 
 tokenizer = GPT2Tokenizer.from_pretrained("sberbank-ai/rugpt3small_based_on_gpt2")
 tokenizer.pad_token = tokenizer.eos_token
