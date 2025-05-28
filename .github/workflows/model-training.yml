@@ -1,0 +1,85 @@
+name: Model Training Pipeline
+
+on:
+  schedule:
+    # Запуск каждую неделю в понедельник в 2:00 UTC
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+    inputs:
+      dataset:
+        description: 'Dataset name or path'
+        required: false
+        default: 'DmitryYarov/aristotle-russian'
+      epochs:
+        description: 'Number of training epochs'
+        required: false
+        default: '5'
+
+jobs:
+  train-model:
+    name: Train Model
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements/base.txt
+        pip install -r requirements/training.txt
+    
+    - name: Prepare training config
+      run: |
+        DATASET="${{ github.event.inputs.dataset || 'DmitryYarov/aristotle-russian' }}"
+        EPOCHS="${{ github.event.inputs.epochs || '5' }}"
+        
+        # Обновляем конфигурацию
+        sed -i "s/dataset_name:.*/dataset_name: \"$DATASET\"/" configs/training_config.yaml
+        sed -i "s/num_train_epochs:.*/num_train_epochs: $EPOCHS/" configs/training_config.yaml
+    
+    - name: Train model
+      run: |
+        python scripts/train.py --config configs/training_config.yaml --output-dir ./trained_model
+    
+    - name: Evaluate model
+      run: |
+        python scripts/evaluate.py --model-path ./trained_model --output evaluation_results.json
+    
+    - name: Upload model
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-model
+        path: ./trained_model
+        retention-days: 7
+    
+    - name: Upload evaluation results
+      uses: actions/upload-artifact@v3
+      with:
+        name: evaluation-results
+        path: evaluation_results.json
+    
+    - name: Create model release
+      if: github.event_name == 'workflow_dispatch'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: model-${{ github.run_number }}
+        name: Model Release ${{ github.run_number }}
+        files: |
+          ./trained_model/**/*
+          evaluation_results.json
+        body: |
+          Автоматически обученная модель Аристотеля
+          
+          Датасет: ${{ github.event.inputs.dataset || 'DmitryYarov/aristotle-russian' }}
+          Эпохи: ${{ github.event.inputs.epochs || '5' }}
+          
+          См. evaluation_results.json для метрик модели.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
