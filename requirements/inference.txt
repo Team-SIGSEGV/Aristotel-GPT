@@ -1,0 +1,24 @@
+# Inference requirements for Aristotle Neural Network project
+
+# Base requirements
+-r base.txt
+
+# API and serving
+fastapi>=0.85.0
+uvicorn>=0.18.0
+gunicorn>=20.1.0
+pydantic>=1.10.0
+
+# Monitoring and metrics
+prometheus-client>=0.14.0
+opentelemetry-api>=1.12.0
+opentelemetry-sdk>=1.12.0
+opentelemetry-exporter-otlp>=1.12.0
+
+# Performance
+onnxruntime>=1.12.0
+optimum>=1.4.0
+
+# Utilities
+python-multipart>=0.0.5
+httpx>=0.23.0
