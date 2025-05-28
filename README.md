@@ -96,6 +96,9 @@ make docker-serve
 - `GET /health` - Проверка состояния сервиса
 - `GET /metrics` - Метрики модели
 
+![image](https://github.com/user-attachments/assets/dc57ddd1-ad19-4424-bfa8-13bbf37d088c)
+
+
 ## Мониторинг
 
 - Логирование через structlog
