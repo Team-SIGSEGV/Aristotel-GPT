@@ -1,0 +1,40 @@
+FROM python:3.9-slim
+
+# Установка рабочей директории
+WORKDIR /app
+
+# Установка переменных окружения
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    MODEL_PATH=/app/model \
+    CONFIG_PATH=/app/config.yaml \
+    API_HOST=0.0.0.0 \
+    API_PORT=8000
+
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Копирование файлов зависимостей
+COPY requirements/base.txt requirements/base.txt
+COPY requirements/inference.txt requirements/inference.txt
+
+# Установка зависимостей
+RUN pip install --no-cache-dir -r requirements/base.txt \
+    && pip install --no-cache-dir -r requirements/inference.txt
+
+# Копирование исходного кода
+COPY src/ src/
+COPY configs/inference_config.yaml config.yaml
+
+# Создание директории для модели
+RUN mkdir -p model
+
+# Открытие порта
+EXPOSE 8000
+
+# Команда по умолчанию
+CMD ["python", "-m", "src.inference.api"]
