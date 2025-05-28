@@ -1,0 +1,26 @@
+# Training requirements for Aristotle Neural Network project
+
+# Base requirements
+-r base.txt
+
+# Hyperparameter optimization
+optuna>=3.0.0
+ray[tune]>=2.0.0
+
+# Metrics and evaluation
+rouge-score>=0.1.2
+nltk>=3.7
+sacrebleu>=2.0.0
+
+# Visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+tensorboard>=2.9.0
+
+# Experiment tracking
+wandb>=0.13.0
+
+# Data processing
+spacy>=3.4.0
+nltk>=3.7
+sentencepiece>=0.1.97

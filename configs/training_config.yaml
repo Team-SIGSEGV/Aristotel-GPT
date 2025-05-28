@@ -1,0 +1,41 @@
+# Конфигурация для обучения модели Аристотеля
+
+# Модель и данные
+model_name: "sberbank-ai/rugpt3small_based_on_gpt2"  # Базовая модель для файн-тюнинга
+dataset_name: "DmitryYarov/aristotle-russian"  # Датасет с текстами Аристотеля
+output_dir: "./models"  # Директория для сохранения обученной модели
+
+# Параметры обучения
+max_length: 512  # Максимальная длина последовательности
+test_size: 0.1  # Доля данных для тестирования
+batch_size: 16  # Размер батча (может быть переопределен Optuna)
+learning_rate: 5e-5  # Скорость обучения (может быть переопределена Optuna)
+weight_decay: 0.01  # Регуляризация весов (может быть переопределена Optuna)
+num_train_epochs: 5  # Количество эпох обучения
+gradient_accumulation_steps: 2  # Шаги накопления градиента
+fp16: true  # Использование смешанной точности (если доступно)
+
+# Параметры аугментации
+augmentation:
+  enabled: true  # Включить аугментацию данных
+  synonym_replacement_prob: 0.3  # Вероятность замены синонимов
+  add_connectors_prob: 0.3  # Вероятность добавления связок
+  sentence_reordering_prob: 0.2  # Вероятность перестановки предложений
+
+# Параметры оптимизации гиперпараметров
+optuna_trials: 5  # Количество испытаний Optuna
+optuna_timeout: 3600  # Таймаут оптимизации в секундах
+optuna_pruner: "median"  # Тип прунера для Optuna
+
+# Параметры логирования
+log_level: "INFO"  # Уровень логирования
+logging_steps: 100  # Шаги логирования
+save_strategy: "epoch"  # Стратегия сохранения модели
+evaluation_strategy: "epoch"  # Стратегия оценки модели
+report_to: "none"  # Куда отправлять отчеты (tensorboard, wandb, none)
+
+# Ранняя остановка
+early_stopping:
+  enabled: true  # Включить раннюю остановку
+  patience: 2  # Количество эпох без улучшения до остановки
+  threshold: 0.01  # Порог для определения улучшения
