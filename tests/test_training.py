@@ -139,7 +139,7 @@ class TestTextAugmenter(unittest.TestCase):
     def setUp(self):
         """Настройка перед каждым тестом"""
         self.augmenter = TextAugmenter()
-        self.test_text = "Мудрость есть знание причин. Добродетель есть середина между двумя крайностями."
+        self.test_text = "Добродетель есть середина между двумя крайностями."
     
     def test_augment_text(self):
         """Тест основного метода аугментации"""
