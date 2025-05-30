@@ -1,4 +1,4 @@
-# Aristotle Neural Network Project
+# Aristotle-GPT
 
 Проект для обучения и развертывания нейросети на основе текстов Аристотеля.
 
