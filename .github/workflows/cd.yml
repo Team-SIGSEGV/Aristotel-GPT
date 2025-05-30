@@ -28,8 +28,8 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: |
-          yourusername/aristotle-training
-          yourusername/aristotle-inference
+          ${{ secrets.DOCKERHUB_USERNAME }}/aristotle-training
+          ${{ secrets.DOCKERHUB_USERNAME }}/aristotle-inference
         tags: |
           type=semver,pattern={{version}}
           type=ref,event=branch
